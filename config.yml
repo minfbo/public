@@ -1,0 +1,25 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6.4
+    steps:
+      - checkout
+      - run: python verbs_generator.py
+      - run: date
+      
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build
+  nightly:
+    triggers:
+      - schedule:
+          cron: "00 19 * * *"
+          filters:
+            branches:
+              only: 
+                - develop
+    jobs:
+      - build
